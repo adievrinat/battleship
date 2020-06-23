@@ -1,0 +1,47 @@
+.bsp-menu {
+  &__label {
+    display: block;
+    text-align: left;
+    margin: 0 0 10px;
+  }
+
+  &__form-group {
+    width: 50%;
+    margin: 0 auto 40px;
+  }
+
+  &__input {
+    background: transparent;
+    border-bottom: 3px solid deepskyblue;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: $font-family-primary;
+    font-size: 2rem;
+    line-height: 1em;
+    font-weight: 600;
+    width: 100%;
+    transition: background-color 0.3s ease-out;
+    padding: 10px;
+
+    &:focus {
+      background-color: rgba(0, 191, 255, 0.18);
+      box-shadow: none;
+      outline: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+    }
+  }
+
+  &__next {
+    font-size: 2rem;
+    line-height: 1em;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      color: deepskyblue;
+    }
+  }
+}

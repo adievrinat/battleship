@@ -1,11 +1,22 @@
 import addInStore from "../../../store/addInStore";
-import SingleAddShips from "../../addShips/single";
+import SingleAddShips from "../../addShips/single/single";
 import store from "../../../store/store";
 
-const singlePlayer = {
-  player: {
-    name: ''
-  },
+class SinglePlayer {
+  constructor() {
+    if (typeof SinglePlayer.instance === "object") {
+      return SinglePlayer.instance;
+    }
+
+    this.player = {
+      name: ''
+    };
+
+    this.single();
+
+    SinglePlayer.instance = this;
+    return this;
+  }
 
   single() {
     let mainMenu = document.querySelector("[data-bsp-main-menu]");
@@ -14,27 +25,27 @@ const singlePlayer = {
     let menuContainer = document.querySelector("[data-bsp-menu-container]");
     let menu = document.createElement("div");
     menu.classList.add("battleship-menu__single-player-menu");
-    menu.classList.add("bsp-sp-menu");
+    menu.classList.add("bsp-menu");
 
     menu.setAttribute("data-bsp-sp-menu", "");
 
     let button = document.createElement("div");
-    button.innerHTML = "Продолжить";
-    button.addEventListener("click", singlePlayer.nextStep);
+    button.classList.add("bsp-menu__next");
+    button.innerHTML = "Next";
+    button.addEventListener("click", this.nextStep.bind(this));
 
-
-    menu.appendChild(singlePlayer.createInput("bsp-menu-single-name", "Введите свое имя", "BSP_SINGLE_NAME"));
+    menu.appendChild(this.createInput("bsp-menu-single-name", "Enter your name", "BSP_SINGLE_NAME"));
     menu.appendChild(button);
 
     menuContainer.appendChild(menu);
-  },
+  }
 
   createInput(id, labelText, name) {
     let formGroup = document.createElement("div");
     let labelName = document.createElement("label");
     let input = document.createElement("input");
 
-    formGroup.classList.add("bsp-sp-menu__form-group");
+    formGroup.classList.add("bsp-menu__form-group");
 
     labelName.setAttribute("for", id);
     labelName.innerText = labelText;
@@ -43,24 +54,26 @@ const singlePlayer = {
     input.setAttribute("id", id);
     input.setAttribute("name", name);
     input.setAttribute("required", "");
-    input.addEventListener("input", singlePlayer.addName);
+    input.addEventListener("input", (e) => {
+      this.addName(e);
+    });
 
-    labelName.classList.add("bsp-sp-menu__label");
-    input.classList.add("bsp-sp-menu__input");
+    labelName.classList.add("bsp-menu__label");
+    input.classList.add("bsp-menu__input");
 
     formGroup.appendChild(labelName);
     formGroup.appendChild(input);
 
     return formGroup;
-  },
+  }
 
-  addName() {
-    singlePlayer.player.name = this.value;
-  },
+  addName(e) {
+    this.player.name = e.currentTarget.value;
+  }
 
   addPlayer() {
     let player = {
-      name: singlePlayer.player.name,
+      name: this.player.name,
       winnings: 0,
       board: [
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -117,10 +130,10 @@ const singlePlayer = {
     };
 
     addInStore(player);
-  },
+  }
 
   nextStep() {
-    singlePlayer.addPlayer();
+    this.addPlayer();
 
     let menuContainer = document.querySelector("[data-bsp-menu-container]");
     let bspSingleMenu = document.querySelector("[data-bsp-sp-menu]");
@@ -168,10 +181,10 @@ const singlePlayer = {
     menuContainer.innerHTML = template;
 
     delete store.menuCls;
-    new SingleAddShips(10);
+    store.addShipsCls = new SingleAddShips(10);
 
     console.log(store);
   }
-};
+}
 
-export default singlePlayer;
+export default SinglePlayer;

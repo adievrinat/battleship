@@ -1,5 +1,6 @@
 import store from "./store/store";
 import Preloader from "./screens/preloader/preloader";
+import CreateMain from "./screens/menu/main/main";
 
 class Game {
   constructor() {
@@ -8,6 +9,8 @@ class Game {
     this.preloader = new Preloader();
     this.startPreloader();
 
+    //временно без прелоадера
+    // store.menuCls = new CreateMain();
   }
 
   startPreloader() {

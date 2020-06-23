@@ -1,8 +1,11 @@
-import store from "../../store/store";
+import store from "../../../store/store";
 
 class SingleAddShips {
   constructor(shipsCount) {
-    console.log(shipsCount);
+    if (typeof SingleAddShips.instance === "object") {
+      return SingleAddShips.instance;
+    }
+
     this.state = {
       shipsCount: shipsCount,
       activeTypeShips: null
@@ -14,6 +17,9 @@ class SingleAddShips {
 
     this.addGrid();
     this.addForm();
+
+    SingleAddShips.instance = this;
+    return this;
   }
 
   addGrid() {

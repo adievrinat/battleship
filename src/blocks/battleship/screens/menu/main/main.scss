@@ -1,0 +1,47 @@
+.battleship-menu {
+  background: radial-gradient(circle, rgba(198, 255, 255, 0.3) 35%, rgba(161, 242, 236, 0.8) 90%);
+  border-left: 30px ridge deepskyblue;
+  border-right: 30px groove deepskyblue;
+  border-top: 30px inset deepskyblue;
+  border-bottom: 30px inset deepskyblue;
+  border-radius: 20%;
+  width: 1200px;
+  //height: 90vh;
+  min-height: 500px;
+  text-align: center;
+  margin: 20px auto;
+  padding: 50px 30px 60px;
+
+  &__logo {
+    font-size: 3rem;
+    line-height: 1em;
+    font-weight: 600;
+    color: ghostwhite;
+    text-shadow: 0 3px 10px deepskyblue;
+    margin: 0 0 100px;
+  }
+
+  .bsp-main-menu {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: map_get($font-size, menu);
+    line-height: map_get($font-size, menu);
+
+    &__item {
+      display: inline-block;
+      color: deepskyblue;
+      cursor: pointer;
+
+      &:not(last-child) {
+        margin: 0 0 20px;
+      }
+
+      &:hover {
+        color: orangered;
+        text-shadow: 1px 1px 2px black;
+      }
+    }
+  }
+}

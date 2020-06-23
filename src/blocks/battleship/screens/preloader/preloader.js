@@ -44,7 +44,6 @@ class Preloader {
           this.preloaderIcon.classList.add("transform");
           this.preloaderIconInner.classList.add("transform");
           let chiefSong = new Audio("../../public/chief-song.mp3");
-          // chiefSong.setAttribute("muted", "muted");
           chiefSong.volume = 0.5;
           chiefSong.addEventListener("canplaythrough", () => {
             /* the audio is now playable; play it if permissions allow */

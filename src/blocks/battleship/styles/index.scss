@@ -1,4 +1,7 @@
 @import "vars";
-@import "./main";
+@import "layout";
 @import "../screens/preloader/preloader";
+@import "../screens/menu/main/main";
+@import "../screens/menu/single/single";
+@import "../screens/addShips/single/single";
 @import "./blocks/grid/grid";

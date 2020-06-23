@@ -1,23 +1,26 @@
-import singlePlayer from "../single/single";
+import SinglePlayer from "../single/single";
+import store from "../../../store/store";
 
 const menuList = [
   {
     tag: "li",
     cls: "bsp-main-menu__item",
-    click: singlePlayer.single,
-    content: "Одиночная игра",
+    click: () => {
+      store.singleCls = new SinglePlayer();
+    },
+    content: "Single Player",
   },
   {
     tag: "li",
     cls: "bsp-main-menu__item",
     // click: menu.twoPlayers,
-    content: "Игра с другом",
+    content: "Two Players",
   },
   {
     tag: "li",
     cls: "bsp-main-menu__item",
     // click: menu.online,
-    content: "Онлайн сражение",
+    content: "Online battle!",
   },
 ];
 
