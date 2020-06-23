@@ -1,0 +1,28 @@
+//breakpoints
+$breakpoints: (
+        xl: 1600px,
+        lg: 1300px,
+        md: 991px,
+        sm: 767px,
+        xs: 575px,
+) !default;
+
+//fonts
+$font-family-base: 'Proxima Nova', sans-serif !default;
+$font-family-secondary: 'Houschka Pro', sans-serif !default;
+
+//colors
+$primary: #33323b !default;
+$secondary: #7c4dff !default;
+
+$black: #000 !default;
+$white: #fff !default;
+$gray-100: #58575c !default;
+
+$content-wrapper-color: #f3f2f5 !default;
+
+//z-index
+$z-index: (
+        header: 6,
+        burger-menu: 5,
+) !default;

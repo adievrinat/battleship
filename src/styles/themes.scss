@@ -1,0 +1,24 @@
+.button {
+  display: inline-block;
+
+  @include text-style(0.75rem, 200, 12px, normal, $white, 0.75px);
+
+  text-transform: uppercase;
+  text-align: center;
+  padding: 22px 35px;
+}
+
+.button_primary {
+  background-color: $primary;
+  transition: background 0.5s cubic-bezier(.27, .8, .47, .97);
+
+  &:hover {
+    background-color: $secondary;
+  }
+}
+
+.subtitle {
+  @include text-style(0.75em, 700, 12px, normal, false, 0.75px);
+
+  text-transform: uppercase;
+}

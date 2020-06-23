@@ -1,0 +1,43 @@
+@import "vars";
+
+@mixin font-face($family, $name, $weight, $style) {
+  font-family: $family;
+  src: url('../../public/fonts/#{$name}.otf');
+  src: url('../../public/fonts/#{$name}.eot?#iefix') format('embedded-opentype'), url('../../public/fonts/#{$name}.woff') format('woff'), url('/../public/fonts/#{$name}.woff2') format('woff2'), url('../../public/fonts/#{$name}.ttf') format('truetype');
+  font-weight: $weight;
+  font-style: $style;
+  font-display: swap;
+}
+
+@mixin text-style($font-size, $font-weight, $line-height, $font-style, $color, $letter-spacing) {
+  font-size: $font-size;
+  font-weight: $font-weight;
+  line-height: $line-height;
+
+  @if $font-style != normal {
+    font-style: $font-style;
+  }
+
+  @if $color != false {
+    color: $color;
+  }
+
+  @if $letter-spacing != false {
+    letter-spacing: $letter-spacing;
+  }
+}
+
+@mixin pseudo($content: '', $display: block, $position: absolute) {
+  content: $content;
+  display: $display;
+
+  @if $position != static {
+    position: $position;
+  }
+}
+
+@mixin breakpoint($arg) {
+  @media(max-width: map_get($breakpoints, $arg)) {
+    @content
+  }
+}

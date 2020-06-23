@@ -1,0 +1,22 @@
+.battleship-menu {
+  background-color: deepskyblue;
+  width: 1000px;
+  margin: 0 auto;
+
+  &__container {
+
+  }
+
+  &__main-menu {
+
+  }
+
+  .bsp-main-menu {
+    font-size: map_get($font-size, menu);
+
+    &__item {
+      color: white;
+      cursor: pointer;
+    }
+  }
+}

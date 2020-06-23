@@ -1,0 +1,331 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  color: $white;
+  z-index: map-get($z-index, header);
+  transform: translateY(-100%);
+  transition: transform 0.3s ease-out;
+
+  @include breakpoint(md) {
+    position: absolute;
+  }
+
+  &_animate {
+    transform: translateY(0);
+  }
+
+  &_transformation {
+    @include breakpoint(md) {
+      position: fixed;
+      animation: showHeader 0.5s cubic-bezier(.7, .45, .47, .97);
+      animation-fill-mode: forwards;
+    }
+
+    .header__container {
+      padding: 0;
+    }
+  }
+
+  &__container {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    transition: padding 0.3s ease;
+    padding: 0 0 0 11.5%;
+
+    @include breakpoint(lg) {
+      padding: 0 0 0 7%;
+    }
+
+    @include breakpoint(sm) {
+      transition: none;
+      padding: 0 0 0 5%;
+    }
+
+    @include breakpoint(xs) {
+      padding: 0;
+    }
+  }
+
+  &__logo {
+    display: inline-block;
+    background-color: $primary;
+    transition: background-color 0.5s cubic-bezier(.6, .3, .12, .79);
+    padding: 35px 55px 25px;
+
+    @include breakpoint(lg) {
+      padding: 22px 30px 15px;
+    }
+
+    &:hover {
+      background-color: transparent;
+
+      @include breakpoint(md) {
+        background-color: $primary;
+      }
+
+      .header__logo-icon {
+        transform: scale(0.5);
+
+        @include breakpoint(md) {
+          transform: none;
+        }
+      }
+
+      .cls-1 {
+        opacity: 0;
+
+        @include breakpoint(md) {
+          opacity: 1;
+        }
+      }
+
+      .cls-2 {
+        fill: $white;
+
+        @include breakpoint(md) {
+          fill: $secondary;
+        }
+      }
+    }
+
+    .cls-1 {
+      transition: opacity 0.3s ease-out;
+
+      @include breakpoint(md) {
+        transition: none;
+      }
+    }
+
+    .cls-2 {
+      transition: fill 0.3s cubic-bezier(.68, .17, .26, .95);
+
+      @include breakpoint(md) {
+        transition: none;
+      }
+    }
+  }
+
+  &__logo_transformation {
+    padding: 51px 37px;
+
+    @include breakpoint(lg) {
+      padding: 40px 30px;
+    }
+
+    @include breakpoint(sm) {
+      padding: 30px 20px;
+    }
+
+    &:hover {
+      background-color: $primary;
+    }
+
+    svg {
+      display: none;
+    }
+
+    .header__logo-hidden {
+      display: block;
+    }
+  }
+
+  &__logo-icon {
+    width: 133px;
+    height: 62px;
+    transition: transform 0.3s cubic-bezier(.68, .17, .26, .95);
+
+    @include breakpoint(lg) {
+      width: 100px;
+      height: 45px;
+    }
+
+    @include breakpoint(md) {
+      transition: none;
+    }
+    @include breakpoint(sm) {
+      width: 80px;
+      height: 36px;
+    }
+  }
+
+  &__logo-hidden {
+    position: relative;
+    display: none;
+    border: 6px solid $white;
+    width: 47px;
+    height: 21px;
+
+    &::after {
+      @include pseudo();
+
+      background-color: $white;
+      left: -6px;
+      bottom: -10px;
+      width: 6px;
+      height: 10px;
+    }
+  }
+
+  &__cabinet {
+    opacity: 0;
+    transform: translateY(-100%);
+    transition: transform 0.25s ease-in-out, opacity 0.25s ease-out;
+    margin: 0 6.0625rem 0 auto;
+    padding: 50px 0 0;
+
+    @include breakpoint(sm) {
+      padding: 33px 0 0;
+      margin: 0 1.875rem 0 auto;
+    }
+  }
+
+  &__cabinet-link {
+    display: block;
+    position: relative;
+
+    @include text-style(1.125em, 900, 20px, normal, false, false);
+
+    transition: color 0.3s ease;
+
+    @include breakpoint(sm) {
+      font-size: 1em;
+      line-height: 18px;
+    }
+
+    @include breakpoint(xs) {
+      display: none;
+    }
+
+    &:hover {
+      color: $secondary;
+
+      &::after {
+        background-color: $secondary;
+        width: 0;
+      }
+    }
+
+    &::after {
+      @include pseudo();
+
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: $white;
+      transition: background-color 0.3s ease, width 0.5s ease-out;
+    }
+  }
+
+  &__cabinet-link_show {
+    opacity: 1;
+    transform: translateY(0);
+    transition: transform 0.25s ease-in-out 0.4s, opacity 0.25s ease-out 0.4s;
+  }
+
+  &__burger {
+    background-color: $black;
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    padding: 48px 0;
+
+    @include breakpoint(lg) {
+      width: 100px;
+      height: 100px;
+      padding: 40px 0;
+    }
+
+    @include breakpoint(sm) {
+      width: 80px;
+      height: 80px;
+      padding: 28px 0;
+    }
+  }
+
+  &__burger_open-menu {
+    background-color: transparent;
+
+    .header__burger-line {
+      &:nth-child(1) {
+        animation: burger-lines-top 0.5s cubic-bezier(.69, .03, .65, .93);
+        animation-fill-mode: forwards;
+      }
+
+      &:nth-child(2) {
+        opacity: 0;
+      }
+
+      &:nth-child(3) {
+        animation: burger-lines-bottom 0.5s cubic-bezier(.69, .03, .65, .93);
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+
+  &__burger_hide-menu {
+    .header__burger-line {
+      &:nth-child(1) {
+        animation: burger-lines-top-hide-menu 0.5s cubic-bezier(.69, .03, .65, .93);
+        animation-fill-mode: forwards;
+      }
+
+      &:nth-child(3) {
+        animation: burger-lines-bottom-hide-menu 0.5s cubic-bezier(.69, .03, .65, .93);
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+
+  &__burger-wrapper {
+    position: relative;
+    height: 100%;
+  }
+
+  &__burger-line {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 32px;
+    height: 2px;
+    background-color: $white;
+    overflow: hidden;
+
+    &::before {
+      @include pseudo();
+
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      transform: translateX(100%);
+      background-color: $secondary;
+      transition: transform 0.3s ease;
+    }
+
+    &:nth-child(1) {
+      top: 0;
+    }
+
+    &:nth-child(2) {
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.4s cubic-bezier(.69, .03, .65, .93);;
+
+      &::before {
+        transition-delay: 0.2s;
+      }
+    }
+
+    &:nth-child(3) {
+      bottom: 0;
+
+      &::before {
+        transition-delay: 0.4s;
+      }
+    }
+  }
+}

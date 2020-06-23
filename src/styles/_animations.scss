@@ -1,0 +1,157 @@
+@keyframes showHeader {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes burger-lines-top {
+  0% {
+    top: 0;
+    transform: translateX(-50%);
+  }
+
+  50% {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+}
+
+@keyframes burger-lines-bottom {
+  0% {
+    bottom: 0;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    bottom: 50%;
+    transform: translateX(-50%) translateY(50%);
+  }
+
+  100% {
+    bottom: 50%;
+    transform: translateX(-50%) translateY(50%) rotate(45deg);
+  }
+}
+
+@keyframes burger-lines-top-hide-menu {
+  0% {
+    top: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+  }
+
+  50% {
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    top: 0;
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes burger-lines-bottom-hide-menu {
+  0% {
+    bottom: 50%;
+    transform: translateX(-50%) translateY(50%) rotate(45deg);
+  }
+
+  50% {
+    bottom: 50%;
+    transform: translateX(-50%) translateY(50%);
+  }
+
+  100% {
+    bottom: 0;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes preloader-part-one {
+  0% {
+    transform: skewX(-20deg);
+  }
+
+  30% {
+    transform: skewX(-20deg) translateX(-3%);
+  }
+
+  70% {
+    transform: skewX(-20deg) translateX(-3%);
+  }
+
+  100% {
+    transform: skewX(-20deg) translateX(-100%);
+  }
+}
+
+@keyframes preloader-part-two {
+  0% {
+    transform: skewX(-20deg);
+  }
+
+  30% {
+    transform: skewX(-20deg) translateX(3%);
+  }
+
+  70% {
+    transform: skewX(-20deg) translateX(3%);
+  }
+
+  100% {
+    transform: skewX(-20deg) translateX(100%);
+  }
+}
+
+//loading
+$count: 10;
+$time: 2;
+
+@keyframes rotatePreloader {
+  0% {
+    transform: translateX(-50%) translateY(-50%) rotateZ(0deg);
+  }
+  100% {
+    transform: translateX(-50%) translateY(-50%) rotateZ(-360deg);
+  }
+}
+
+@for $i from 1 through $count {
+  .preloader__loading {
+    div {
+      &:nth-child(#{$i}) {
+        transform: rotateZ(((360 / $count) * ($i - 1)) + deg);
+        animation: rotateCircle + $i $time + s infinite linear;
+        z-index: $count - $i;
+      }
+    }
+  }
+  @keyframes rotateCircle#{$i} {
+    #{percentage(((50 / $count) * ($i - 1)) / 100)} {
+      opacity: 0;
+    }
+    #{percentage((((50 / $count) + 0.0001) * ($i - 1)) / 100)} {
+      opacity: 1;
+      transform: rotateZ((0 - ((360 / $count) * ($i - 2))) + deg);
+    }
+    #{percentage((((50 / $count) * ($i - 0)) + 2) / 100)} {
+      transform: rotateZ((0 - ((360 / $count) * ($i - 1))) + deg);
+    }
+    #{percentage(((50 + ((50 / $count) * ($i - 0))) + 2) / 100)} {
+      transform: rotateZ((0 - ((360 / $count) * ($i - 1))) + deg);
+    }
+    100% {
+      transform: rotateZ((0 - ((360 / $count) * ($count - 1))) + deg);
+      opacity: 1;
+    }
+  }
+}

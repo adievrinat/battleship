@@ -1,0 +1,60 @@
+.chess {
+  &__container {
+    width: 1000px;
+    margin: 0 auto;
+  }
+
+  &__table {
+
+  }
+
+  .table {
+    display: flex;
+    flex-wrap: wrap;
+
+    &__title-horizontal {
+      display: flex;
+      flex-basis: 100%;
+      flex-shrink: 0;
+
+      .table__title-symbol {
+        width: 100px;
+      }
+    }
+
+    &__title-vertical {
+
+    }
+    
+    &__title-symbol {
+      text-align: center;
+    }
+
+
+    &__grid {
+
+    }
+
+    &__grid-row {
+      display: flex;
+    }
+
+    &__grid-item {
+      width: 100px;
+      height: 100px;
+      padding: 10px;
+    }
+
+    &__grid-item_dark {
+      background-color: brown;
+    }
+
+    &__warrior {
+      cursor: pointer;
+    }
+
+    &__warrior_active {
+      border: 2px solid red;
+    }
+  }
+}

@@ -1,0 +1,88 @@
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+
+  &__horizontal-coordinates {
+    display: flex;
+    flex-basis: 100%;
+  }
+
+  &__vertical-coordinates {
+
+  }
+
+  &__container {
+    width: 500px;
+    height: 500px;
+  }
+
+  &__row {
+    display: flex;
+    height: 10%;
+
+    &.battleship {
+      .grid__row-item {
+        &:hover {
+          background-color: deepskyblue;
+        }
+      }
+    }
+
+    &.cruiser {
+      .grid__row-item {
+        &:hover {
+          background-color: orange;
+        }
+      }
+    }
+
+    &.destroyer {
+      .grid__row-item {
+        &:hover {
+          background-color: darkorchid;
+        }
+      }
+    }
+
+    &.torpedo {
+      .grid__row-item {
+        &:hover {
+          background-color: indianred;
+        }
+      }
+    }
+  }
+
+  &__row-item {
+    background-color: white;
+    border: 1px solid black;
+    width: 10%;
+    height: 100%;
+    cursor: pointer;
+
+    &[data-bsp-grid-row-disabled="true"] {
+      pointer-events: none;
+      cursor: auto;
+    }
+
+    &.battleship {
+      background-color: deepskyblue;
+    }
+
+    &.cruiser {
+      background-color: orange;
+    }
+
+    &.destroyer {
+      background-color: darkorchid;
+    }
+
+    &.torpedo {
+      background-color: indianred;
+    }
+
+    &.blocked {
+      background-color: red;
+    }
+  }
+}

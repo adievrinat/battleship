@@ -1,0 +1,30 @@
+@import "utils";
+
+@font-face {
+  @include font-face('Proxima Nova', 'ProximaNovaLight', 200, normal);
+}
+
+@font-face {
+  @include font-face('Proxima Nova', 'ProximaNovaBold', 800, normal);
+}
+
+@font-face {
+  @include font-face('Proxima Nova', 'ProximaNovaExtrabold', 900, normal);
+}
+
+@font-face {
+  @include font-face('Houschka Pro', 'HouschkaPro-Light', 300, normal);
+}
+
+@font-face {
+  @include font-face('Houschka Pro', 'HouschkaPro-DemiBold', 800, normal);
+}
+
+@font-face {
+  font-family: "SP Font";
+  src: url('../../public/fonts/fonts_spfont.ttf');
+  font-weight: 600;
+  font-style: normal;
+  //font-display: swap; //это задержка загрузки шрифта, сначала стандартный потом загруженный - для google page speed;
+}
+
