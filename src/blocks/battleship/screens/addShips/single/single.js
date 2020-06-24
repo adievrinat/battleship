@@ -67,7 +67,7 @@ class SingleAddShips {
 
         label.classList.add("add-ships-single__label");
         label.setAttribute("for", id);
-        label.innerText = labelText;
+        // label.innerText = labelText;
 
         input.classList.add("add-ships-single__input");
         input.setAttribute("type", "radio");
@@ -81,8 +81,8 @@ class SingleAddShips {
         count.classList.add("add-ships-single__count");
         count.innerText = countShips;
 
-        formGroup.appendChild(label);
         formGroup.appendChild(input);
+        formGroup.appendChild(label);
         formGroup.appendChild(count);
 
         return formGroup;
@@ -92,8 +92,9 @@ class SingleAddShips {
       let description = document.createElement("div");
       let form = document.createElement("div");
 
-      hi.innerText = "Приветствуем тебя " + store.player.name + "!";
-      description.innerText = "Выбери тип корабля и расположи на сетке";
+      hi.innerText = "Hi " + store.player.name + "!";
+      description.innerText = "Choose your ship type";
+      description.style.margin = "0 0 70px 0";
 
       form.classList.add("add-ships-single__form");
 
@@ -203,8 +204,12 @@ class SingleAddShips {
             this.shipsIndicators.querySelectorAll("[data-bsp-indicator-form-group]").forEach(element => {
               if (element.getAttribute("data-ship-type") === this.state.activeTypeShips) {
                 let input = element.querySelector("input");
+                let label = element.querySelector("label");
                 input.checked = false;
                 input.style.display = "none";
+                label.style.pointerEvents = "none";
+                label.classList.add("complete");
+
                 storeShip.complete = true;
 
                 if (this.state.shipsCount !== 0) {
@@ -215,9 +220,9 @@ class SingleAddShips {
                   //добавляем кнопку Играть
                   let startGame = document.createElement("div");
                   startGame.classList.add("add-ships-single__start");
-                  startGame.innerText = "Играть";
+                  startGame.innerText = "GO";
                   startGame.addEventListener("click", store.gameCls.startSingleGame);
-                  this.addShipsContainer.appendChild(startGame);
+                  this.shipsIndicators.appendChild(startGame);
                 }
               }
             });

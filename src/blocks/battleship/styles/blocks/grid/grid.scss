@@ -1,17 +1,32 @@
 .grid {
   display: flex;
   flex-wrap: wrap;
+  flex-basis: 60%;
 
   &__horizontal-coordinates {
     display: flex;
     flex-basis: 100%;
+    padding: 0 0 0 18px;
+
+    .grid__coordinates-item {
+      width: 50px;
+      justify-content: center;
+    }
   }
 
   &__vertical-coordinates {
 
   }
 
+  &__coordinates-item {
+    display: flex;
+    align-items: center;
+    height: 50px;
+  }
+
   &__container {
+    background-color: $white;
+    border: 1px solid deepskyblue;
     width: 500px;
     height: 500px;
   }
@@ -23,7 +38,9 @@
     &.battleship {
       .grid__row-item {
         &:hover {
-          background-color: deepskyblue;
+          background: transparent url("../../public/images/cartman-icon.png") no-repeat center center;
+          background-size: contain;
+          //background-color: deepskyblue;
         }
       }
     }
@@ -31,7 +48,9 @@
     &.cruiser {
       .grid__row-item {
         &:hover {
-          background-color: orange;
+          background: transparent url("../../public/images/stan-icon.png") no-repeat center center;
+          background-size: contain;
+          //background-color: orange;
         }
       }
     }
@@ -39,7 +58,9 @@
     &.destroyer {
       .grid__row-item {
         &:hover {
-          background-color: darkorchid;
+          background: transparent url("../../public/images/kyle-icon.png") no-repeat center center;
+          background-size: contain;
+          //background-color: darkorchid;
         }
       }
     }
@@ -47,15 +68,16 @@
     &.torpedo {
       .grid__row-item {
         &:hover {
-          background-color: indianred;
+          background: transparent url("../../public/images/kenny-icon.png") no-repeat center center;
+          background-size: contain;
+          //background-color: indianred;
         }
       }
     }
   }
 
   &__row-item {
-    background-color: white;
-    border: 1px solid black;
+    border: 1px solid deepskyblue;
     width: 10%;
     height: 100%;
     cursor: pointer;
@@ -66,23 +88,33 @@
     }
 
     &.battleship {
-      background-color: deepskyblue;
+      background: transparent url("../../public/images/cartman-icon.png") no-repeat center center;
+      background-size: contain;
+      //background-color: deepskyblue;
     }
 
     &.cruiser {
-      background-color: orange;
+      background: transparent url("../../public/images/stan-icon.png") no-repeat center center;
+      background-size: contain;
+      //background-color: orange;
     }
 
     &.destroyer {
-      background-color: darkorchid;
+      background: transparent url("../../public/images/kyle-icon.png") no-repeat center center;
+      background-size: contain;
+      //background-color: darkorchid;
     }
 
     &.torpedo {
-      background-color: indianred;
+      background: transparent url("../../public/images/kenny-icon.png") no-repeat center center;
+      background-size: contain;
+      //background-color: indianred;
     }
 
     &.blocked {
-      background-color: red;
+      background: rgba(0, 191, 255, 0.18) url("../../public/images/mr.hanki.png") no-repeat center center;
+      background-size: contain;
+      //background-color: red;
     }
   }
 }

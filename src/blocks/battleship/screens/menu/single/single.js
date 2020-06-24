@@ -11,6 +11,7 @@ class SinglePlayer {
     this.player = {
       name: ''
     };
+    this.menuContainer = document.querySelector("[data-bsp-menu-container]");
 
     this.single();
 
@@ -22,7 +23,6 @@ class SinglePlayer {
     let mainMenu = document.querySelector("[data-bsp-main-menu]");
     mainMenu.remove();
 
-    let menuContainer = document.querySelector("[data-bsp-menu-container]");
     let menu = document.createElement("div");
     menu.classList.add("battleship-menu__single-player-menu");
     menu.classList.add("bsp-menu");
@@ -37,7 +37,7 @@ class SinglePlayer {
     menu.appendChild(this.createInput("bsp-menu-single-name", "Enter your name", "BSP_SINGLE_NAME"));
     menu.appendChild(button);
 
-    menuContainer.appendChild(menu);
+    this.menuContainer.appendChild(menu);
   }
 
   createInput(id, labelText, name) {
@@ -53,6 +53,7 @@ class SinglePlayer {
     input.setAttribute("type", "text");
     input.setAttribute("id", id);
     input.setAttribute("name", name);
+    input.setAttribute("data-bsp-sp-name-input", "");
     input.setAttribute("required", "");
     input.addEventListener("input", (e) => {
       this.addName(e);
@@ -132,17 +133,41 @@ class SinglePlayer {
     addInStore(player);
   }
 
-  nextStep() {
-    this.addPlayer();
-
-    let menuContainer = document.querySelector("[data-bsp-menu-container]");
-    let bspSingleMenu = document.querySelector("[data-bsp-sp-menu]");
-
-    if (bspSingleMenu) {
-      bspSingleMenu.remove();
+  checkInputs(element) {
+    if (element.value.length > 0) {
+      element.classList.contains("invalid") ? element.classList.remove("invalid") : '';
+      element.classList.add("is-valid");
+    } else if (element.value.length === 0) {
+      element.classList.contains("is-valid") ? element.classList.remove("is-valid") : '';
+      element.classList.add("invalid");
     }
+  }
 
-    const template = `<div class="battleship-menu__add-ships add-ships-single" data-bsp-menu-add-ships>
+  nextStep() {
+    const inputs = this.menuContainer.querySelectorAll("[data-bsp-sp-name-input]");
+    let valid = false;
+
+    inputs.forEach(element => {
+      this.checkInputs(element);
+
+      if (element.classList.contains("invalid")) {
+        valid = false;
+        return false;
+      } else {
+        valid = true;
+      }
+    });
+
+    if (valid) {
+      this.addPlayer();
+
+      let bspSingleMenu = document.querySelector("[data-bsp-sp-menu]");
+
+      if (bspSingleMenu) {
+        bspSingleMenu.remove();
+      }
+
+      const template = `<div class="battleship-menu__add-ships add-ships-single" data-bsp-menu-add-ships>
                         <div class="add-ships-single__grid grid">
                             <ul class="grid__horizontal-coordinates">
                                   <li class="grid__coordinates-item">A</li>
@@ -178,12 +203,11 @@ class SinglePlayer {
                         </div>
                     </div>`;
 
-    menuContainer.innerHTML = template;
+      this.menuContainer.innerHTML = template;
 
-    delete store.menuCls;
-    store.addShipsCls = new SingleAddShips(10);
-
-    console.log(store);
+      delete store.menuCls;
+      store.addShipsCls = new SingleAddShips(10);
+    }
   }
 }
 

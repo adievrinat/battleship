@@ -1,3 +1,147 @@
 .add-ships-single {
   display: flex;
+
+  &__ships {
+    text-align: left;
+  }
+
+  &__form {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__form-group {
+    display: flex;
+    align-items: center;
+    flex: 0 0 50%;
+    max-width: 100%;
+    width: 50%;
+    margin: 0 0 40px;
+
+    .add-ships-single__input {
+      display: none;
+
+      &:checked + .add-ships-single__label {
+        &::after {
+          opacity: 1;
+        }
+      }
+    }
+
+    .add-ships-single__label {
+      position: relative;
+      display: block;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      margin: 0 30px 0 0;
+
+      &::after {
+        @include pseudo();
+
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 86, 252, 0.37);
+        width: 130%;
+        height: 130%;
+        border-radius: 100%;
+        opacity: 0;
+        z-index: -1;
+      }
+    }
+
+    &[data-ship-type="battleship"] {
+      .add-ships-single__label {
+        background: transparent url("../../public/images/cartman-icon.png") no-repeat center center;
+        background-size: contain;
+
+        &.complete {
+          &::after {
+            background: rgba(255, 255, 255, 0.8) url("../../public/images/complete.png") no-repeat 78% 18%;
+            background-size: 40% auto;
+            opacity: 1;
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    &[data-ship-type="cruiser"] {
+      .add-ships-single__label {
+        background: transparent url("../../public/images/stan-icon.png") no-repeat center center;
+        background-size: contain;
+
+        &.complete {
+          &::after {
+            background: rgba(255, 255, 255, 0.8) url("../../public/images/complete.png") no-repeat 78% 18%;
+            background-size: 40% auto;
+            opacity: 1;
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    &[data-ship-type="destroyer"] {
+      .add-ships-single__label {
+        background: transparent url("../../public/images/kyle-icon.png") no-repeat center center;
+        background-size: contain;
+
+        &.complete {
+          &::after {
+            background: rgba(255, 255, 255, 0.8) url("../../public/images/complete.png") no-repeat 78% 18%;
+            background-size: 40% auto;
+            opacity: 1;
+            z-index: 1;
+          }
+        }
+      }
+    }
+
+    &[data-ship-type="torpedo"] {
+      .add-ships-single__label {
+        background: transparent url("../../public/images/kenny-icon.png") no-repeat center center;
+        background-size: contain;
+
+        &.complete {
+          &::after {
+            background: rgba(255, 255, 255, 0.8) url("../../public/images/complete.png") no-repeat 78% 18%;
+            background-size: 40% auto;
+            opacity: 1;
+            z-index: 1;
+          }
+        }
+      }
+    }
+  }
+
+  &__start {
+    display: block;
+    background-color: orangered;
+    border-radius: 100%;
+    border-left: 3px solid rgba(000, 000, 000, 0.2);
+    border-top: 3px solid rgba(000, 000, 000, 0.2);
+    border-right: 3px solid rgba(000, 000, 000, 0.2);
+    border-bottom: 3px solid rgba(000, 000, 000, 0.2);
+    font-size: 2.5rem;
+    font-weight: 600;
+    line-height: 121px;
+    color: white;
+    width: 120px;
+    height: 120px;
+    cursor: pointer;
+    text-align: center;
+    transition: box-shadow 0.4s ease, transform 0.4s ease, border 0.4s ease;
+    margin: 20px 0 0;
+
+    &:hover {
+      border-left: 1px solid rgba(000, 000, 000, 0.2);
+      border-top: 4px solid rgba(000, 000, 000, 0.2);
+      border-right: 11px solid rgba(000, 000, 000, 0.2);
+      border-bottom: 4px solid rgba(000, 000, 000, 0.2);
+      box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.25);
+      transform: translateY(-5px);
+    }
+  }
 }
