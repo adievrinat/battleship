@@ -8,6 +8,7 @@
   &__form {
     display: flex;
     flex-wrap: wrap;
+    margin: 0 0 10px;
   }
 
   &__form-group {
@@ -120,16 +121,16 @@
     display: block;
     background-color: orangered;
     border-radius: 100%;
-    border-left: 3px solid rgba(000, 000, 000, 0.2);
-    border-top: 3px solid rgba(000, 000, 000, 0.2);
-    border-right: 3px solid rgba(000, 000, 000, 0.2);
-    border-bottom: 3px solid rgba(000, 000, 000, 0.2);
-    font-size: 2.5rem;
+    border-left: 3px solid rgba(0, 0, 0, 0.2);
+    border-top: 3px solid rgba(0, 0, 0, 0.2);
+    border-right: 3px solid rgba(0, 0, 0, 0.2);
+    border-bottom: 3px solid rgba(0, 0, 0, 0.2);
+    font-size: 2rem;
     font-weight: 600;
-    line-height: 121px;
+    line-height: 80px;
     color: white;
-    width: 120px;
-    height: 120px;
+    width: 80px;
+    height: 80px;
     cursor: pointer;
     text-align: center;
     transition: box-shadow 0.4s ease, transform 0.4s ease, border 0.4s ease;
@@ -141,7 +142,48 @@
       border-right: 11px solid rgba(000, 000, 000, 0.2);
       border-bottom: 4px solid rgba(000, 000, 000, 0.2);
       box-shadow: 0 0 20px 5px rgba(0, 0, 0, 0.25);
-      transform: translateY(-5px);
+      //transform: translateY(-5px);
     }
+  }
+
+  &__change-orientation {
+    position: relative;
+    display: inline-block;
+    border: 2px solid deeppink;
+    font-size: 1.25rem;
+    line-height: 1em;
+    font-weight: 600;
+    color: deeppink;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    margin: 0 0 20px;
+    padding: 10px;
+
+    &::after {
+      @include pseudo();
+
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 0;
+      background-color: deeppink;
+      transition: height 0.3s ease;
+      z-index: -1;
+    }
+
+    &:hover {
+      color: white;
+
+      &::after {
+        height: 100%;
+      }
+    }
+  }
+
+  &__ships-orientation {
+    font-size: 2rem;
+    line-height: 1em;
+    font-weight: 600;
+    color: orangered;
   }
 }

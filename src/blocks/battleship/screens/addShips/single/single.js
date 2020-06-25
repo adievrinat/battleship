@@ -8,7 +8,8 @@ class SingleAddShips {
 
     this.state = {
       shipsCount: shipsCount,
-      activeTypeShips: null
+      activeTypeShips: null,
+      orientation: "horizontal"
     };
 
     this.addShipsContainer = document.querySelector("[data-bsp-menu-add-ships]");
@@ -92,9 +93,9 @@ class SingleAddShips {
       let description = document.createElement("div");
       let form = document.createElement("div");
 
-      hi.innerText = "Hi " + store.player.name + "!";
+      hi.innerText = "Hi, " + store.player.name + "!";
       description.innerText = "Choose your ship type";
-      description.style.margin = "0 0 70px 0";
+      description.style.margin = "0 0 40px 0";
 
       form.classList.add("add-ships-single__form");
 
@@ -103,10 +104,32 @@ class SingleAddShips {
       form.appendChild(createInput(store.player.ships.destroyer.id, store.player.ships.destroyer.name, store.player.ships.destroyer.count, store.player.ships.destroyer.type));
       form.appendChild(createInput(store.player.ships.torpedo.id, store.player.ships.torpedo.name, store.player.ships.torpedo.count, store.player.ships.torpedo.type));
 
+      let changeOrientation = document.createElement("div");
+      changeOrientation.classList.add("add-ships-single__change-orientation");
+      changeOrientation.innerText = "change orientation";
+      changeOrientation.addEventListener("click", this.changeOrientation.bind(this));
+
+      let orientation = document.createElement("div");
+      orientation.classList.add("add-ships-single__ships-orientation");
+      orientation.setAttribute("data-bsp-single-ships-orientation", "");
+      orientation.innerText = this.state.orientation;
+
       this.shipsIndicators.appendChild(hi);
       this.shipsIndicators.appendChild(description);
       this.shipsIndicators.appendChild(form);
+      this.shipsIndicators.appendChild(changeOrientation);
+      this.shipsIndicators.appendChild(orientation);
     }
+  }
+
+  changeOrientation() {
+    if (this.state.orientation === "horizontal") {
+      this.state.orientation = "vertical";
+    } else if (this.state.orientation === "vertical") {
+      this.state.orientation = "horizontal";
+    }
+
+    document.querySelector("[data-bsp-single-ships-orientation]").innerHTML = this.state.orientation;
   }
 
   activeTypeShips(e) {
@@ -148,7 +171,7 @@ class SingleAddShips {
   }
 
   addShip(element, storeShip, clsItem) {
-    let type = "horizontal";
+    let type = this.state.orientation;
     let rowIndex = +element.getAttribute("data-bsp-grid-row-index");
     let itemIndex = +element.getAttribute("data-bsp-grid-item-index");
 
@@ -156,85 +179,168 @@ class SingleAddShips {
 
     if (storeShip.count !== 0 && storeShip.count > 0) {
       //Проверяем тип корабля и что корабль не выходит за пределы сетки (точка + длинная корабля)
-      if (type === "horizontal" && itemIndex + storeShip.length - 1 < 10) {
+      this.addShipHorizontal(type, rowIndex, itemIndex, storeShip, clsItem);
 
-        if (store.player.board[rowIndex][itemIndex] === 0) {
+      this.addShipVertical(type, rowIndex, itemIndex, storeShip, clsItem);
+    }
+  }
 
-          //Перед добавлением нужно проверить будет ли заходить корабль своими частями на занятые места
-          for (var c = 0; c < storeShip.length; c++) {
-            if (store.player.board[rowIndex][itemIndex + c] === 1) {
-              alert('Здесь нельзя строить!');
-              return;
-            }
+  addShipHorizontal(type, rowIndex, itemIndex, storeShip, clsItem) {
+    if (type === "horizontal" && itemIndex + storeShip.length - 1 < 10) {
+
+      if (store.player.board[rowIndex][itemIndex] === 0) {
+
+        //Перед добавлением нужно проверить будет ли заходить корабль своими частями на занятые места
+        for (var c = 0; c < storeShip.length; c++) {
+          if (store.player.board[rowIndex][itemIndex + c] === 1) {
+            alert('Здесь нельзя строить!');
+            return;
           }
+        }
 
-          let coordinatesArr = [];
+        let coordinatesArr = [];
 
-          for (var p = 0; p < storeShip.length; p++) {
-            //заполняем матрицу
-            store.player.board[rowIndex][itemIndex + p] = 1;
-            storeShip.complete = true;
+        for (var p = 0; p < storeShip.length; p++) {
+          //заполняем матрицу
+          store.player.board[rowIndex][itemIndex + p] = 1;
+          storeShip.complete = true;
 
-            //добавляем координаты корабля
-            let coordinate = { rowIndex: rowIndex, itemIndex: itemIndex + p };
-            coordinatesArr.push(coordinate);
+          //добавляем координаты корабля
+          let coordinate = { rowIndex: rowIndex, itemIndex: itemIndex + p };
+          coordinatesArr.push(coordinate);
 
-            //DOM элементы
-            let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]")[rowIndex];
-            let item = row.querySelectorAll("[data-bsp-grid-item]")[itemIndex + p];
-            item.setAttribute("data-bsp-grid-row-disabled", true);
-            item.classList.add(clsItem);
-          }
-          //кол-во кораблей станивится на единицу меньше
-          --storeShip.count;
-          --this.state.shipsCount;
+          //DOM элементы
+          let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]")[rowIndex];
+          let item = row.querySelectorAll("[data-bsp-grid-item]")[itemIndex + p];
+          item.setAttribute("data-bsp-grid-row-disabled", true);
+          item.classList.add(clsItem);
+        }
+        //кол-во кораблей станивится на единицу меньше
+        --storeShip.count;
+        --this.state.shipsCount;
 
-          //доблавяем координаты в конец массива
-          storeShip.coordinates.unshift(coordinatesArr);
+        //доблавяем координаты в конец массива
+        storeShip.coordinates.unshift(coordinatesArr);
 
-          //блокируем клетки возле корабля
-          this.blockedAroundShip(type, storeShip);
+        //блокируем клетки возле корабля
+        this.blockedAroundHorizontalShip(type, storeShip);
 
-          //если все корабли данного типа добавлены, удаляем цвет ховера
-          if (storeShip.count === 0) {
-            this.gridContainer.querySelectorAll("[data-bsp-grid-row]").forEach(element => {
-              element.classList.contains(storeShip.type) ? element.classList.remove(storeShip.type) : '';
-            });
+        //если все корабли данного типа добавлены, удаляем цвет ховера и запрещаем выбор данного типа
+        if (storeShip.count === 0) {
+          this.gridContainer.querySelectorAll("[data-bsp-grid-row]").forEach(element => {
+            element.classList.contains(storeShip.type) ? element.classList.remove(storeShip.type) : '';
+          });
 
-            this.shipsIndicators.querySelectorAll("[data-bsp-indicator-form-group]").forEach(element => {
-              if (element.getAttribute("data-ship-type") === this.state.activeTypeShips) {
-                let input = element.querySelector("input");
-                let label = element.querySelector("label");
-                input.checked = false;
-                input.style.display = "none";
-                label.style.pointerEvents = "none";
-                label.classList.add("complete");
+          this.shipsIndicators.querySelectorAll("[data-bsp-indicator-form-group]").forEach(element => {
+            if (element.getAttribute("data-ship-type") === this.state.activeTypeShips) {
+              let input = element.querySelector("input");
+              let label = element.querySelector("label");
+              input.checked = false;
+              input.style.display = "none";
+              label.style.pointerEvents = "none";
+              label.classList.add("complete");
 
-                storeShip.complete = true;
+              storeShip.complete = true;
 
-                if (this.state.shipsCount !== 0) {
-                  this.state.activeTypeShips = null;
-                } else {
-                  //!!! ВСЕ КОРАБЛИ ДОБАВЛЕНЫ
-                  this.state.activeTypeShips = "complete";
-                  //добавляем кнопку Играть
-                  let startGame = document.createElement("div");
-                  startGame.classList.add("add-ships-single__start");
-                  startGame.innerText = "GO";
-                  startGame.addEventListener("click", store.gameCls.startSingleGame);
-                  this.shipsIndicators.appendChild(startGame);
-                }
+              if (this.state.shipsCount !== 0) {
+                this.state.activeTypeShips = null;
+              } else {
+                //!!! ВСЕ КОРАБЛИ ДОБАВЛЕНЫ
+                this.state.activeTypeShips = "complete";
+                //добавляем кнопку Играть
+                let startGame = document.createElement("div");
+                startGame.classList.add("add-ships-single__start");
+                startGame.innerText = "GO";
+                startGame.addEventListener("click", store.gameCls.startSingleGame);
+                this.shipsIndicators.appendChild(startGame);
               }
-            });
+            }
+          });
 
-            console.log(this.state.activeTypeShips);
-          }
+          console.log(this.state.activeTypeShips);
         }
       }
     }
   }
 
-  blockedAroundShip(type, ship) {
+  addShipVertical(type, rowIndex, itemIndex, storeShip, clsItem) {
+    if (type === "vertical" && rowIndex + storeShip.length - 1 < 10) {
+      if (store.player.board[rowIndex][itemIndex] === 0) {
+
+        //Перед добавлением нужно проверить будет ли заходить корабль своими частями на занятые места
+        for (var op = 0; op < storeShip.length; op++) {
+          if (store.player.board[rowIndex + op][itemIndex] === 1) {
+            alert('Здесь нельзя строить!');
+            return;
+          }
+        }
+
+        let coordinatesArr = [];
+
+        for (var cr = 0; cr < storeShip.length; cr++) {
+          //заполняем матрицу
+          store.player.board[rowIndex + cr][itemIndex] = 1;
+          storeShip.complete = true;
+
+          //добавляем координаты корабля
+          let coordinate = { rowIndex: rowIndex + cr, itemIndex: itemIndex };
+          coordinatesArr.push(coordinate);
+
+          //DOM элементы
+          let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]")[rowIndex + cr];
+          let item = row.querySelectorAll("[data-bsp-grid-item]")[itemIndex];
+          item.setAttribute("data-bsp-grid-row-disabled", true);
+          item.classList.add(clsItem);
+        }
+
+        //кол-во кораблей станивится на единицу меньше
+        --storeShip.count;
+        --this.state.shipsCount;
+
+        //доблавяем координаты в конец массива
+        storeShip.coordinates.unshift(coordinatesArr);
+
+        //блокируем клетки возле корабля
+        this.blockedAroundVerticalShip(type, storeShip);
+
+        //если все корабли данного типа добавлены, удаляем цвет ховера и запрещаем выбор данного типа
+        if (storeShip.count === 0) {
+          this.gridContainer.querySelectorAll("[data-bsp-grid-row]").forEach(element => {
+            element.classList.contains(storeShip.type) ? element.classList.remove(storeShip.type) : '';
+          });
+
+          this.shipsIndicators.querySelectorAll("[data-bsp-indicator-form-group]").forEach(element => {
+            if (element.getAttribute("data-ship-type") === this.state.activeTypeShips) {
+              let input = element.querySelector("input");
+              let label = element.querySelector("label");
+              input.checked = false;
+              input.style.display = "none";
+              label.style.pointerEvents = "none";
+              label.classList.add("complete");
+
+              storeShip.complete = true;
+
+              if (this.state.shipsCount !== 0) {
+                this.state.activeTypeShips = null;
+              } else {
+                //!!! ВСЕ КОРАБЛИ ДОБАВЛЕНЫ
+                this.state.activeTypeShips = "complete";
+                //добавляем кнопку Играть
+                let startGame = document.createElement("div");
+                startGame.classList.add("add-ships-single__start");
+                startGame.innerText = "GO";
+                startGame.addEventListener("click", store.gameCls.startSingleGame);
+                this.shipsIndicators.appendChild(startGame);
+              }
+            }
+          });
+          console.log(store.player);
+        }
+      }
+    }
+  }
+
+  blockedAroundHorizontalShip(type, ship) {
     let shipLength = ship.length;
     let coordinates = ship.coordinates;
     let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]");
@@ -257,7 +363,6 @@ class SingleAddShips {
         if (rowIndex === 0) {
           if (itemIndex0) {
             store.player.board[rowIndex][itemIndex + shipLength] = 1;
-
             blocked(rowIndex, itemIndex + shipLength);
 
             for (var cr = itemIndex; cr <= shipLength; cr++) {
@@ -268,7 +373,6 @@ class SingleAddShips {
 
           if (itemIndex9) {
             store.player.board[rowIndex][itemIndex - 1] = 1;
-
             blocked(rowIndex, itemIndex - 1);
 
             for (var pr = itemIndex; pr <= itemIndex + shipLength; pr++) {
@@ -348,7 +452,6 @@ class SingleAddShips {
             //По правому краю
 
             store.player.board[rowIndex][itemIndex - 1] = 1;
-
             blocked(rowIndex, itemIndex - 1);
 
             for (var ff = itemIndex; ff <= itemIndex + shipLength; ff++) {
@@ -384,6 +487,150 @@ class SingleAddShips {
     }
 
     console.log(store.player);
+  };
+
+  blockedAroundVerticalShip(type, ship) {
+    let shipLength = ship.length;
+    let coordinates = ship.coordinates;
+    let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]");
+
+    let blocked = (rowInd, itmInd) => {
+      row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].setAttribute("data-bsp-grid-row-disabled", true);
+
+      if (!row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.contains("blocked"))
+        row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.add("blocked");
+    };
+
+    if (type === "vertical") {
+      if (coordinates instanceof Array) {
+        let rowIndex = coordinates[0][0].rowIndex;
+        let itemIndex = coordinates[0][0].itemIndex;
+
+        let itemIndex0 = itemIndex === 0;
+        let itemIndex9 = itemIndex === 9;
+
+        if (rowIndex === 0) {
+          if (itemIndex0) {
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+            blocked(rowIndex + shipLength, itemIndex);
+
+            for (var zz = rowIndex; zz <= shipLength; zz++) {
+              blocked(rowIndex + zz, itemIndex + 1);
+              store.player.board[rowIndex + zz][itemIndex + 1] = 1;
+            }
+          }
+
+          if (itemIndex9) {
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+
+            blocked(rowIndex + shipLength, itemIndex);
+
+            for (var yt = rowIndex; yt <= rowIndex + shipLength; yt++) {
+              blocked(yt, itemIndex - 1);
+              store.player.board[yt][itemIndex - 1] = 1;
+            }
+          }
+
+          if (!itemIndex0 && !itemIndex9) {
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+            blocked(rowIndex + shipLength, itemIndex);
+
+            for (var szt = rowIndex; szt <= rowIndex + shipLength; szt++) {
+              blocked(szt, itemIndex - 1);
+              store.player.board[szt][itemIndex - 1] = 1;
+            }
+
+            for (var sztc = rowIndex; sztc <= rowIndex + shipLength; sztc++) {
+              blocked(sztc, itemIndex + 1);
+              store.player.board[sztc][itemIndex + 1] = 1;
+            }
+          }
+
+        } else if (rowIndex + shipLength - 1 === 9) {
+          if (itemIndex0) {
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var xx = rowIndex - 1; xx <= rowIndex - 1 + shipLength; xx++) {
+              blocked(xx, itemIndex + 1);
+              store.player.board[xx][itemIndex + 1] = 1;
+            }
+          }
+
+          if (itemIndex9) {
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var xxv = rowIndex - 1; xxv <= rowIndex - 1 + shipLength; xxv++) {
+              blocked(xxv, itemIndex - 1);
+              store.player.board[xxv][itemIndex - 1] = 1;
+            }
+          }
+
+          if (!itemIndex0 && !itemIndex9) {
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var xxl = rowIndex - 1; xxl <= rowIndex - 1 + shipLength; xxl++) {
+              blocked(xxl, itemIndex + 1);
+              store.player.board[xxl][itemIndex + 1] = 1;
+            }
+
+            for (var xxm = rowIndex - 1; xxm <= rowIndex - 1 + shipLength; xxm++) {
+              blocked(xxm, itemIndex - 1);
+              store.player.board[xxm][itemIndex - 1] = 1;
+            }
+          }
+
+        } else if (rowIndex !== 0 && rowIndex + shipLength - 1 !== 9) {
+          if (itemIndex0) {
+            //По левому краю
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+            blocked(rowIndex + shipLength, itemIndex);
+
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var zzc = rowIndex - 1; zzc <= rowIndex + shipLength; zzc++) {
+              blocked(zzc, itemIndex + 1);
+              store.player.board[zzc][itemIndex + 1] = 1;
+            }
+          }
+
+          if (itemIndex9) {
+            //По правому краю
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+            blocked(rowIndex + shipLength, itemIndex);
+
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var zzcx = rowIndex - 1; zzcx <= rowIndex + shipLength; zzcx++) {
+              blocked(zzcx, itemIndex - 1);
+              store.player.board[zzcx][itemIndex - 1] = 1;
+            }
+          }
+
+          if (!itemIndex0 && !itemIndex9) {
+            store.player.board[rowIndex + shipLength][itemIndex] = 1;
+            blocked(rowIndex + shipLength, itemIndex);
+
+            store.player.board[rowIndex - 1][itemIndex] = 1;
+            blocked(rowIndex - 1, itemIndex);
+
+            for (var tttt = rowIndex - 1; tttt <= rowIndex + shipLength; tttt++) {
+              blocked(tttt, itemIndex + 1);
+              store.player.board[tttt][itemIndex + 1] = 1;
+            }
+
+            for (var cccc = rowIndex - 1; cccc <= rowIndex + shipLength; cccc++) {
+              blocked(cccc, itemIndex - 1);
+              store.player.board[cccc][itemIndex - 1] = 1;
+            }
+          }
+        }
+      }
+    }
   };
 }
 
