@@ -7,7 +7,7 @@ class CreateMain {
     }
 
     this.container = document.querySelector("#battleship");
-    this.template = `<main class="battleship-menu">
+    this.template = `<main class="battleship-menu" data-bsp-menu>
        <div class="battleship-menu__logo">South Park: Battleship</div>
       <div class="battleship-menu__container" data-bsp-menu-container>         
           <ul class="battleship-menu__main-menu bsp-main-menu" data-bsp-main-menu>

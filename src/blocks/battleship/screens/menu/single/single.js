@@ -82,6 +82,14 @@ class SinglePlayer {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
       ],
+      // opponentBoard: [
+      //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      //   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      // ],
+      bombedOpponent: { all: 0, battleship: 0, cruiser: 0, destroyer: 0, torpedo: 0 },
+      bombedAll: 0,
       ships: {
         battleship: {
           id: "single-ships-1",
@@ -92,7 +100,7 @@ class SinglePlayer {
           count: 1,
           complete: false,
           coordinates: [],
-          bombed: 0
+          bombedShips: 0
         },
         cruiser: {
           id: "single-ships-2",
@@ -103,7 +111,7 @@ class SinglePlayer {
           count: 2,
           complete: false,
           coordinates: [],
-          bombed: 0
+          bombedShips: 0
         },
         destroyer: {
           id: "single-ships-3",
@@ -114,7 +122,7 @@ class SinglePlayer {
           count: 3,
           complete: false,
           coordinates: [],
-          bombed: 0
+          bombedShips: 0
         },
         torpedo: {
           id: "single-ships-4",
@@ -125,7 +133,7 @@ class SinglePlayer {
           count: 4,
           complete: false,
           coordinates: [],
-          bombed: 0
+          bombedShips: 0
         }
       }
     };

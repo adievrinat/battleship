@@ -1,4 +1,7 @@
 import store from "../../../store/store";
+import blockedAroundHorizontalShip from "./blockedArountHorizontalShip";
+import blockedAroundVerticalShip from "./blockedAroundVerticalShip";
+import addOpponent from "./addOpponent";
 
 class SingleAddShips {
   constructor(shipsCount) {
@@ -198,7 +201,7 @@ class SingleAddShips {
           }
         }
 
-        let coordinatesArr = [];
+        let coordinatesArr = { coordinates: [], blockedCoordinates: [], bombedLength: 0, killShip: false };
 
         for (var p = 0; p < storeShip.length; p++) {
           //заполняем матрицу
@@ -206,8 +209,8 @@ class SingleAddShips {
           storeShip.complete = true;
 
           //добавляем координаты корабля
-          let coordinate = { rowIndex: rowIndex, itemIndex: itemIndex + p };
-          coordinatesArr.push(coordinate);
+          let coordinate = { rowIndex: rowIndex, itemIndex: itemIndex + p, bombed: false };
+          coordinatesArr.coordinates.push(coordinate);
 
           //DOM элементы
           let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]")[rowIndex];
@@ -223,7 +226,7 @@ class SingleAddShips {
         storeShip.coordinates.unshift(coordinatesArr);
 
         //блокируем клетки возле корабля
-        this.blockedAroundHorizontalShip(type, storeShip);
+        blockedAroundHorizontalShip(type, storeShip, this.gridContainer);
 
         //если все корабли данного типа добавлены, удаляем цвет ховера и запрещаем выбор данного типа
         if (storeShip.count === 0) {
@@ -251,13 +254,11 @@ class SingleAddShips {
                 let startGame = document.createElement("div");
                 startGame.classList.add("add-ships-single__start");
                 startGame.innerText = "GO";
-                startGame.addEventListener("click", store.gameCls.startSingleGame);
+                startGame.addEventListener("click", this.go.bind(this));
                 this.shipsIndicators.appendChild(startGame);
               }
             }
           });
-
-          console.log(this.state.activeTypeShips);
         }
       }
     }
@@ -275,7 +276,7 @@ class SingleAddShips {
           }
         }
 
-        let coordinatesArr = [];
+        let coordinatesArr = { coordinates: [], blockedCoordinates: [], bombedLength: 0, killShip: false };
 
         for (var cr = 0; cr < storeShip.length; cr++) {
           //заполняем матрицу
@@ -283,8 +284,8 @@ class SingleAddShips {
           storeShip.complete = true;
 
           //добавляем координаты корабля
-          let coordinate = { rowIndex: rowIndex + cr, itemIndex: itemIndex };
-          coordinatesArr.push(coordinate);
+          let coordinate = { rowIndex: rowIndex + cr, itemIndex: itemIndex, bombed: false };
+          coordinatesArr.coordinates.push(coordinate);
 
           //DOM элементы
           let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]")[rowIndex + cr];
@@ -301,7 +302,7 @@ class SingleAddShips {
         storeShip.coordinates.unshift(coordinatesArr);
 
         //блокируем клетки возле корабля
-        this.blockedAroundVerticalShip(type, storeShip);
+        blockedAroundVerticalShip(type, storeShip, this.gridContainer);
 
         //если все корабли данного типа добавлены, удаляем цвет ховера и запрещаем выбор данного типа
         if (storeShip.count === 0) {
@@ -329,309 +330,34 @@ class SingleAddShips {
                 let startGame = document.createElement("div");
                 startGame.classList.add("add-ships-single__start");
                 startGame.innerText = "GO";
-                startGame.addEventListener("click", store.gameCls.startSingleGame);
+                startGame.addEventListener("click", this.go.bind(this));
                 this.shipsIndicators.appendChild(startGame);
               }
             }
           });
-          console.log(store.player);
+          console.log(store);
         }
       }
     }
   }
 
-  blockedAroundHorizontalShip(type, ship) {
-    let shipLength = ship.length;
-    let coordinates = ship.coordinates;
-    let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]");
+  addNewPlayer() {
+    let player = store.player;
+    let ships = [];
+    ships.push(store.player.ships.battleship);
+    ships.push(store.player.ships.cruiser);
+    ships.push(store.player.ships.destroyer);
+    ships.push(store.player.ships.torpedo);
 
-    let blocked = (rowInd, itmInd) => {
-      row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].setAttribute("data-bsp-grid-row-disabled", true);
+    player.ships = ships;
+  }
 
-      if (!row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.contains("blocked"))
-        row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.add("blocked");
-    };
+  go() {
+    this.addNewPlayer();
+    addOpponent();
 
-    if (type === "horizontal") {
-      if (coordinates instanceof Array) {
-        let rowIndex = coordinates[0][0].rowIndex;
-        let itemIndex = coordinates[0][0].itemIndex;
-
-        let itemIndex0 = itemIndex === 0;
-        let itemIndex9 = itemIndex + shipLength - 1 === 9;
-
-        if (rowIndex === 0) {
-          if (itemIndex0) {
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-            blocked(rowIndex, itemIndex + shipLength);
-
-            for (var cr = itemIndex; cr <= shipLength; cr++) {
-              blocked(rowIndex + 1, itemIndex + cr);
-              store.player.board[rowIndex + 1][itemIndex + cr] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var pr = itemIndex; pr <= itemIndex + shipLength; pr++) {
-              blocked(rowIndex + 1, pr - 1);
-              store.player.board[rowIndex + 1][pr - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-
-            blocked(rowIndex, itemIndex + shipLength);
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var tt = itemIndex; tt <= itemIndex + shipLength + 1; tt++) {
-              blocked(rowIndex + 1, tt - 1);
-              store.player.board[rowIndex + 1][tt - 1] = 1;
-            }
-          }
-
-        } else if (rowIndex === 9) {
-          if (itemIndex0) {
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-
-            blocked(rowIndex, itemIndex + shipLength);
-
-            for (var tr = itemIndex; tr <= shipLength; tr++) {
-              blocked(rowIndex - 1, itemIndex + tr);
-              store.player.board[rowIndex - 1][itemIndex + tr] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var er = itemIndex; er <= itemIndex + shipLength; er++) {
-              blocked(rowIndex - 1, er - 1);
-              store.player.board[rowIndex - 1][er - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-
-            blocked(rowIndex, itemIndex + shipLength);
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var sv = itemIndex; sv <= itemIndex + shipLength + 1; sv++) {
-              blocked(rowIndex - 1, sv - 1);
-              store.player.board[rowIndex - 1][sv - 1] = 1;
-            }
-          }
-
-        } else if (rowIndex !== 0 && rowIndex !== 9) {
-
-          if (itemIndex0) {
-            //По левому краю
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-            blocked(rowIndex, itemIndex + shipLength);
-
-            for (var cc = itemIndex; cc <= shipLength; cc++) {
-              blocked(rowIndex - 1, itemIndex + cc);
-              store.player.board[rowIndex - 1][itemIndex + cc] = 1;
-            }
-
-            for (var rr = itemIndex; rr <= shipLength; rr++) {
-              blocked(rowIndex + 1, itemIndex + rr);
-              store.player.board[rowIndex + 1][itemIndex + rr] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            //По правому краю
-
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var ff = itemIndex; ff <= itemIndex + shipLength; ff++) {
-              blocked(rowIndex - 1, ff - 1);
-              store.player.board[rowIndex - 1][ff - 1] = 1;
-            }
-
-            for (var te = itemIndex; te <= itemIndex + shipLength; te++) {
-              blocked(rowIndex + 1, te - 1);
-              store.player.board[rowIndex + 1][te - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex][itemIndex + shipLength] = 1;
-            store.player.board[rowIndex][itemIndex - 1] = 1;
-
-            blocked(rowIndex, itemIndex + shipLength);
-            blocked(rowIndex, itemIndex - 1);
-
-            for (var uu = itemIndex; uu <= itemIndex + shipLength + 1; uu++) {
-              blocked(rowIndex - 1, uu - 1);
-              store.player.board[rowIndex - 1][uu - 1] = 1;
-            }
-
-            for (var bh = itemIndex; bh <= itemIndex + shipLength + 1; bh++) {
-              blocked(rowIndex + 1, bh - 1);
-              store.player.board[rowIndex + 1][bh - 1] = 1;
-            }
-          }
-        }
-      }
-    }
-
-    console.log(store.player);
-  };
-
-  blockedAroundVerticalShip(type, ship) {
-    let shipLength = ship.length;
-    let coordinates = ship.coordinates;
-    let row = this.gridContainer.querySelectorAll("[data-bsp-grid-row]");
-
-    let blocked = (rowInd, itmInd) => {
-      row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].setAttribute("data-bsp-grid-row-disabled", true);
-
-      if (!row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.contains("blocked"))
-        row[rowInd].querySelectorAll("[data-bsp-grid-item]")[itmInd].classList.add("blocked");
-    };
-
-    if (type === "vertical") {
-      if (coordinates instanceof Array) {
-        let rowIndex = coordinates[0][0].rowIndex;
-        let itemIndex = coordinates[0][0].itemIndex;
-
-        let itemIndex0 = itemIndex === 0;
-        let itemIndex9 = itemIndex === 9;
-
-        if (rowIndex === 0) {
-          if (itemIndex0) {
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-            blocked(rowIndex + shipLength, itemIndex);
-
-            for (var zz = rowIndex; zz <= shipLength; zz++) {
-              blocked(rowIndex + zz, itemIndex + 1);
-              store.player.board[rowIndex + zz][itemIndex + 1] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-
-            blocked(rowIndex + shipLength, itemIndex);
-
-            for (var yt = rowIndex; yt <= rowIndex + shipLength; yt++) {
-              blocked(yt, itemIndex - 1);
-              store.player.board[yt][itemIndex - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-            blocked(rowIndex + shipLength, itemIndex);
-
-            for (var szt = rowIndex; szt <= rowIndex + shipLength; szt++) {
-              blocked(szt, itemIndex - 1);
-              store.player.board[szt][itemIndex - 1] = 1;
-            }
-
-            for (var sztc = rowIndex; sztc <= rowIndex + shipLength; sztc++) {
-              blocked(sztc, itemIndex + 1);
-              store.player.board[sztc][itemIndex + 1] = 1;
-            }
-          }
-
-        } else if (rowIndex + shipLength - 1 === 9) {
-          if (itemIndex0) {
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var xx = rowIndex - 1; xx <= rowIndex - 1 + shipLength; xx++) {
-              blocked(xx, itemIndex + 1);
-              store.player.board[xx][itemIndex + 1] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var xxv = rowIndex - 1; xxv <= rowIndex - 1 + shipLength; xxv++) {
-              blocked(xxv, itemIndex - 1);
-              store.player.board[xxv][itemIndex - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var xxl = rowIndex - 1; xxl <= rowIndex - 1 + shipLength; xxl++) {
-              blocked(xxl, itemIndex + 1);
-              store.player.board[xxl][itemIndex + 1] = 1;
-            }
-
-            for (var xxm = rowIndex - 1; xxm <= rowIndex - 1 + shipLength; xxm++) {
-              blocked(xxm, itemIndex - 1);
-              store.player.board[xxm][itemIndex - 1] = 1;
-            }
-          }
-
-        } else if (rowIndex !== 0 && rowIndex + shipLength - 1 !== 9) {
-          if (itemIndex0) {
-            //По левому краю
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-            blocked(rowIndex + shipLength, itemIndex);
-
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var zzc = rowIndex - 1; zzc <= rowIndex + shipLength; zzc++) {
-              blocked(zzc, itemIndex + 1);
-              store.player.board[zzc][itemIndex + 1] = 1;
-            }
-          }
-
-          if (itemIndex9) {
-            //По правому краю
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-            blocked(rowIndex + shipLength, itemIndex);
-
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var zzcx = rowIndex - 1; zzcx <= rowIndex + shipLength; zzcx++) {
-              blocked(zzcx, itemIndex - 1);
-              store.player.board[zzcx][itemIndex - 1] = 1;
-            }
-          }
-
-          if (!itemIndex0 && !itemIndex9) {
-            store.player.board[rowIndex + shipLength][itemIndex] = 1;
-            blocked(rowIndex + shipLength, itemIndex);
-
-            store.player.board[rowIndex - 1][itemIndex] = 1;
-            blocked(rowIndex - 1, itemIndex);
-
-            for (var tttt = rowIndex - 1; tttt <= rowIndex + shipLength; tttt++) {
-              blocked(tttt, itemIndex + 1);
-              store.player.board[tttt][itemIndex + 1] = 1;
-            }
-
-            for (var cccc = rowIndex - 1; cccc <= rowIndex + shipLength; cccc++) {
-              blocked(cccc, itemIndex - 1);
-              store.player.board[cccc][itemIndex - 1] = 1;
-            }
-          }
-        }
-      }
-    }
-  };
+    store.gameCls.startSinglePlayerGame();
+  }
 }
 
 export default SingleAddShips;

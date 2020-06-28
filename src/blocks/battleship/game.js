@@ -1,6 +1,7 @@
 import store from "./store/store";
 import Preloader from "./screens/preloader/preloader";
 import CreateMain from "./screens/menu/main/main";
+import SinglePlayerBattle from "./screens/battle/single/battle-single";
 
 class Game {
   constructor() {
@@ -10,16 +11,18 @@ class Game {
     this.startPreloader();
 
     //временно без прелоадера
-    // store.menuCls = new CreateMain();
+    store.menuCls = new CreateMain();
   }
 
   startPreloader() {
-    if (this.preloader !== undefined)
-      this.preloader.start();
+    // if (this.preloader !== undefined)
+    //   this.preloader.start();
   }
 
-  startSingleGame() {
-    console.log("start single game");
+  startSinglePlayerGame() {
+    store.singleBattleCls = new SinglePlayerBattle();
+    delete store.addShipsCls;
+    delete store.singleCls;
     console.log(store);
   }
 }
