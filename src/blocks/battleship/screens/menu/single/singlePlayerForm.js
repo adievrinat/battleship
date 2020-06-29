@@ -1,11 +1,17 @@
 class SinglePlayerForm {
   constructor(mainMenu, menuContainer, nextStep, player) {
+    if (typeof SinglePlayerForm.instance === "object") {
+      return SinglePlayerForm.instance;
+    }
 
     this.mainMenu = mainMenu;
     this.menuContainer = menuContainer;
     this.nextStep = nextStep;
     this.player = player;
     this.addForm();
+
+    SinglePlayerForm.instance = this;
+    return this;
   }
 
   addName(e) {

@@ -17,7 +17,6 @@ class SinglePlayer {
     this.mainMenu = document.querySelector("[data-bsp-main-menu]");
 
     new SinglePlayerForm(this.mainMenu, this.menuContainer, this.nextStep, this.player);
-    // this.addForm();
     SinglePlayer.instance = this;
     return this;
   }
